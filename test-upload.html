@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload Test (Images Blocked)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .upload-form {
+            border: 2px dashed #ccc;
+            padding: 20px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .file-input {
+            margin: 20px 0;
+        }
+        .submit-btn {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .submit-btn:hover {
+            background: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>File Upload Test</h1>
+    
+    <div class="info">
+        <h3>⚠️ Important Notice</h3>
+        <p><strong>Image files are now blocked!</strong> You can only upload:</p>
+        <ul style="text-align: left; display: inline-block;">
+            <li>PDF files (.pdf)</li>
+            <li>Word documents (.doc, .docx)</li>
+            <li>Excel files (.xls, .xlsx)</li>
+            <li>Text files (.txt, .csv)</li>
+            <li>JSON/XML files</li>
+        </ul>
+    </div>
+    
+    <div class="upload-form">
+        <h3>Upload File (No Images)</h3>
+        <form id="uploadForm" enctype="multipart/form-data">
+            <div class="file-input">
+                <input type="file" id="fileInput" name="image" accept=".pdf,.doc,.docx,.txt,.csv,.json,.xml" required>
+            </div>
+            <button type="submit" class="submit-btn">Upload File</button>
+        </form>
+    </div>
+
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData();
+            const fileInput = document.getElementById('fileInput');
+            const resultDiv = document.getElementById('result');
+            
+            if (fileInput.files.length === 0) {
+                resultDiv.innerHTML = '<div class="result error">Please select a file</div>';
+                return;
+            }
+            
+            const file = fileInput.files[0];
+            
+            // Check if it's an image file
+            if (file.type.startsWith('image/')) {
+                resultDiv.innerHTML = '<div class="result error">Image files are not allowed! Please select a different file type.</div>';
+                return;
+            }
+            
+            formData.append('image', file);
+            
+            try {
+                const response = await fetch('/user/upload-profile-picture', {
+                    method: 'POST',
+                    body: formData,
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <div class="result success">
+                            <h4>Upload Successful!</h4>
+                            <p>${result.message}</p>
+                            <p>File URL: ${result.data.imageUrl}</p>
+                            <p>File Name: ${file.name}</p>
+                            <p>File Type: ${file.type}</p>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="result error">
+                            <h4>Upload Failed</h4>
+                            <p>${result.message}</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="result error">
+                        <h4>Error</h4>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>
