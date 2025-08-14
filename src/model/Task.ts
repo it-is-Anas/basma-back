@@ -12,6 +12,33 @@ const taskSchema = new Schema({
         type: String,
         required: true,
     },
+    user: {
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: 'User'
+    },
+    priority: {
+        required: true,
+        type: String
+    },
+    status: {
+        required: true,
+        type: String
+    },
+    deadline: {
+        required: true,
+        type: Date,
+    },
+    tags: {
+        required: true,
+        type: Date,
+    },
+    labels: {
+        required: true,
+        type: Date,
+    },
+},{
+    timestamps: true,
 });
 
 
