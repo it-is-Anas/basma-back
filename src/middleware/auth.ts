@@ -1,6 +1,6 @@
 import type { Request ,Response ,NextFunction} from "express";
 import jwt from 'jsonwebtoken';
-import { jwtConfig } from '../config';
+import { jwtConfig } from '../config/config';
 import User from '../model/User';
 
 const auth = async(req: Request, res: Response,next: NextFunction) => {

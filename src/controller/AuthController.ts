@@ -1,10 +1,10 @@
 import { body, validationResult } from "express-validator";
 import type { Request ,Response ,NextFunction} from "express";
 import bcrypt from 'bcrypt';
-import { bcryptConfig } from "../config";
+import { bcryptConfig } from "../config/config";
 import User from "../model/User";
 import jwt from 'jsonwebtoken';
-import { jwtConfig } from '../config';
+import { jwtConfig } from '../config/config';
 
 export const signUp = async (req: Request,res: Response,next: NextFunction)=>{
     const errors = validationResult(req);
