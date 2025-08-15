@@ -1,0 +1,65 @@
+import { Response , NextFunction } from "express";
+import { Req } from "../types";
+import Task from "../model/Task";
+import Label from "../model/Label";
+
+
+
+export const create = async (req:Req,res:Response,next: NextFunction)=>{
+    const { title, desc, status,priority , deadline,tags,labelId } = req.body;
+    try{   
+        const label = await Label.findById(labelId);
+        if(!label){
+            throw new Error('No label found with this label id');
+        }
+        const task = await Task.create({
+            title,
+            desc,
+            status,
+            priority,
+            deadline,
+            tags,
+            label,
+            user: req.user
+        });
+
+        res.status(201).json({
+            msg:'Task created Successfull',
+            data: task,
+        });
+
+    }catch(err: any){
+        res.status(500).json({
+            msg: err.message|| 'somthing went wrong please try again later!',
+        })
+    }
+};
+
+export const get = async (req:Req,res:Response,next: NextFunction)=>{
+    try{
+        const tasks = await Task.find({user: req.user});
+        res.status(200).json({
+            msg:'Your tasks',
+            data: tasks,
+        });
+    }catch(err: any){
+        res.status(500).json({
+            msg: err.message|| 'somthing went wrong please try again later!',
+        })
+    };
+};
+
+export const destroy = async (req:Req,res:Response,next: NextFunction)=>{
+    const { id } = req.params;
+    try{
+        const task = await Task.findByIdAndDelete(id);
+        res.json({
+            msg: 'Task deleted succeful',
+        })
+    }
+    catch(err: any){
+        res.status(500).json({
+            msg: err.message|| 'somthing went wrong please try again later!',
+        })
+    };
+};

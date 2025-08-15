@@ -27,15 +27,16 @@ const taskSchema = new Schema({
     },
     deadline: {
         required: true,
-        type: Date,
+        type: String,
     },
     tags: {
         required: true,
-        type: Date,
+        type: Array,
     },
-    labels: {
+    label: {
+        type: Schema.Types.ObjectId,
         required: true,
-        type: Date,
+        ref: 'Label',
     },
 },{
     timestamps: true,
