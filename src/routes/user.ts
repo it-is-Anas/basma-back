@@ -8,7 +8,7 @@ const routes = Router();
 
 routes.get('/profile',myProfile);
 
-routes.post('/upload-profile-picture', 
+routes.post('/upload-profile-picture',
     upload.single('image'), 
     uploadProfilePicture
 );

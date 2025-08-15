@@ -7,10 +7,6 @@ import jwt from 'jsonwebtoken';
 import { jwtConfig } from '../config/config';
 
 export const signUp = async (req: Request,res: Response,next: NextFunction)=>{
-    const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(421).json({msg:'Error Validation',filed: errors['errors'][0]['path'],error_msg: errors['errors'][0]['msg']});
-        }
     const { first_name , last_name , email , password } = req.body;
     try{
         const checkUser = await User.findOne({email:email});
@@ -51,10 +47,6 @@ export const signUp = async (req: Request,res: Response,next: NextFunction)=>{
 
 
 export const logIn = async(req: Request,res: Response,next: NextFunction)=>{
-    const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(421).json({msg:'Error Validation',filed: errors['errors'][0]['path'],error_msg: errors['errors'][0]['msg']});
-        }
     const {email , password } = req.body;
     let user ;
     try{
