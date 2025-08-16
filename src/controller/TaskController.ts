@@ -60,6 +60,40 @@ export const destroy = async (req:Req,res:Response,next: NextFunction)=>{
     catch(err: any){
         res.status(500).json({
             msg: err.message|| 'somthing went wrong please try again later!',
-        })
+        });
+    };
+};
+
+export const update = async  (req:Req,res:Response,next: NextFunction)=>{
+    const { id } = req.params;
+    const { title, desc, status,priority , deadline,tags,labelId } = req.body;
+    try{
+        const label = await Label.findById(labelId);
+        if(!label){
+            throw new Error('No label found with this label id');
+        }
+        const checkTask = await Task.findOne({_id: id,user: req.user});
+        if(!checkTask){
+            throw new Error('You don\'t have task with this id !');
+        }
+        const task = await Task.findByIdAndUpdate(id,{
+            title,
+            desc,
+            status,
+            priority,
+            deadline,
+            tags,
+            label,
+        },{
+            new: true,
+        });
+        res.status(201).json({
+            msg: 'You have updated this task!',
+            data: task,
+        });
+    }catch(err: any){
+        res.status(500).json({
+            msg: err.message|| 'somthing went wrong please try again later!',
+        });
     };
 };
