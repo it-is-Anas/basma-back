@@ -7,6 +7,8 @@ import authRoutes from './routes/auth';
 import userRoutes from './routes/user';
 import labelRoutes from './routes/label';
 import taskRoutes from './routes/task';
+import projectRoutes from './routes/project';
+
 
 const app = express();
 app.use(express.json());
@@ -18,6 +20,8 @@ app.use('/auth',authRoutes);
 app.use('/user', auth ,userRoutes);
 app.use('/label',auth,labelRoutes);
 app.use('/task',auth,taskRoutes);
+app.use('/project',auth,projectRoutes);
+
 
 app.use((error: any, req: Req, res: express.Response, next: express.NextFunction) => {
     if (error instanceof Error && (

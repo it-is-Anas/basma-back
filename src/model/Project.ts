@@ -20,7 +20,11 @@ const projectSchema = new Schema({
         deadline: Date,
         tags:[],
         label: String
-    }]
+    }],user: {
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: 'User'
+    }
 },{
     timestamps: true,
 });
