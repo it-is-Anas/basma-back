@@ -48,10 +48,6 @@ export const uploadProfilePicture = async (req: Req, res: Response, next: NextFu
         });
 
     } catch (error) {
-        console.error('Error uploading profile picture:', error);
-        res.status(500).json({ 
-            success: false, 
-            message: 'Internal server error' 
-        });
+        return next(error);
     }
 };

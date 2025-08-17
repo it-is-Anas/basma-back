@@ -29,23 +29,19 @@ export const create = async (req:Req,res:Response,next: NextFunction)=>{
         });
 
     }catch(err: any){
-        res.status(500).json({
-            msg: err.message|| 'somthing went wrong please try again later!',
-        })
+        return next(err);
     }
 };
 
 export const get = async (req:Req,res:Response,next: NextFunction)=>{
     try{
-        const tasks = await Task.find({user: req.user});
+        const tasks = await Task.find({user: req.user,project: false});
         res.status(200).json({
             msg:'Your tasks',
             data: tasks,
         });
     }catch(err: any){
-        res.status(500).json({
-            msg: err.message|| 'somthing went wrong please try again later!',
-        })
+        return next(err);
     };
 };
 
@@ -58,9 +54,7 @@ export const destroy = async (req:Req,res:Response,next: NextFunction)=>{
         })
     }
     catch(err: any){
-        res.status(500).json({
-            msg: err.message|| 'somthing went wrong please try again later!',
-        });
+        return next(err);
     };
 };
 
@@ -92,8 +86,6 @@ export const update = async  (req:Req,res:Response,next: NextFunction)=>{
             data: task,
         });
     }catch(err: any){
-        res.status(500).json({
-            msg: err.message|| 'somthing went wrong please try again later!',
-        });
+        return next(err);
     };
 };

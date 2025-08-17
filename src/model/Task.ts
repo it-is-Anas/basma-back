@@ -25,6 +25,10 @@ const taskSchema = new Schema({
         required: true,
         type: String
     },
+    project: {
+        default: false,
+        type: Boolean
+    },
     deadline: {
         required: true,
         type: String,

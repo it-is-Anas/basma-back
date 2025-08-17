@@ -41,6 +41,50 @@ app.use((error: any, req: Req, res: express.Response, next: express.NextFunction
         });
     }
     
+    // Handle label-related errors
+    if (error instanceof Error && (
+        error.message === 'label is all ready exist' ||
+        error.message === 'No label with this id' ||
+        error.message === 'You can update this label' ||
+        error.message === 'This label is already exist !' ||
+        error.message === 'Same label don\'t need to update !'
+    )) {
+        return res.status(400).json({
+            msg: error.message
+        });
+    }
+    
+    // Handle project-related errors
+    if (error instanceof Error && (
+        error.message === 'You don\'t have project with this id !' ||
+        error.message === 'No Project matched with id !' ||
+        error.message === 'You can\'t add task to this project !'
+    )) {
+        return res.status(400).json({
+            msg: error.message
+        });
+    }
+    
+    // Handle task-related errors
+    if (error instanceof Error && (
+        error.message === 'No label found with this label id' ||
+        error.message === 'You don\'t have task with this id !'
+    )) {
+        return res.status(400).json({
+            msg: error.message
+        });
+    }
+    
+    // Handle auth-related errors
+    if (error instanceof Error && (
+        error.message === 'email is already token' ||
+        error.message === 'Email or password not match'
+    )) {
+        return res.status(400).json({
+            msg: error.message
+        });
+    }
+    
     console.error('Error:', error);
     res.status(500).json({
         msg: 'Internal server error'

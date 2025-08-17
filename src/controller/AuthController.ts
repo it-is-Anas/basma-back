@@ -11,18 +11,17 @@ export const signUp = async (req: Request,res: Response,next: NextFunction)=>{
     try{
         const checkUser = await User.findOne({email:email});
         if(checkUser){
-            return res.status(422).json({msg:'email is already token',filed:'email',error_msg: 'email should be unique'});
+            throw new Error('email is already token');
         }
     }catch(err){
-        console.log(err);
+        return next(err);
     }
     let hashedPassword:string = '';
     try{
         const hp = await bcrypt.hash(password,bcryptConfig.saltyHash);
         hashedPassword = hp;
     }catch(err){
-        res.status(400).json({msg: 'somthing went wrong '});
-        console.log(err);
+        return next(err);
     };
     let user;
     try{
@@ -34,8 +33,7 @@ export const signUp = async (req: Request,res: Response,next: NextFunction)=>{
             img: '',
         });
     }catch(err){
-        res.status(400).json({msg: 'somthing went wrong '});
-        console.log(err);
+        return next(err);
     };
     let accessToken: string= '';
     if(user){
@@ -52,26 +50,24 @@ export const logIn = async(req: Request,res: Response,next: NextFunction)=>{
     try{
         user = await User.findOne({email:email});
     }catch(err){
-        console.log(err);
-        res.status(400).json({msg: 'somthing went wrong '});
+        return next(err);
     }
     if(!user){
-        res.status(404).json({msg:'Email or password not match'});
+        throw new Error('Email or password not match');
     }
     if(user){
         let check ;
         try{
             check = await bcrypt.compare(password,user?.password);
         }catch(err){
-            res.status(400).json({msg: 'somthing went wrong '});
-            console.log(err);
+            return next(err);
         }
         if(check){
             let accessToken: string= '';
             accessToken = jwt.sign({_id:user._id ,email: user.email,},jwtConfig.secertKey,);
             res.json({data: user,msg:'welcome !',token: accessToken});
         }else{
-            res.status(404).json({msg:'Email or password not match'});
+            throw new Error('Email or password not match');
         }
     }
 
@@ -82,8 +78,7 @@ export const getAllUsers = async (req: Request,res: Response,next: NextFunction)
         const users = await User.find();
         res.json({msg: '',users});
     }catch(err){
-        res.status(400).json({msg: 'somthing went wrong '});
-        console.log(err);
+        return next(err);
     };
 };
 

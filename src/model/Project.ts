@@ -17,10 +17,11 @@ const projectSchema = new Schema({
         status: String,
         title: String,
         desc: String,
-        deadline: Date,
+        deadline: String,
         tags:[],
         label: String
-    }],user: {
+    }],
+    user: {
         type: Schema.Types.ObjectId,
         required: true,
         ref: 'User'
@@ -28,6 +29,5 @@ const projectSchema = new Schema({
 },{
     timestamps: true,
 });
-
 
 export default model('Project',projectSchema);

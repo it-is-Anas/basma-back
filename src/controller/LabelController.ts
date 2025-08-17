@@ -10,10 +10,7 @@ export const create = async (req:Req,res:Response,next:NextFunction)=>{
             throw new Error('label is all ready exist');
         }
     }catch(err: any){
-        // next(err,req,res,next); // fix this use the middle ware of error 
-        res.status(500).json({
-            msg: err.message,
-        });
+        return next(err);
     }
     try{
         const newLabel = await Label.create({label: label,user: req.user});
@@ -22,9 +19,7 @@ export const create = async (req:Req,res:Response,next:NextFunction)=>{
             label: newLabel,
         });
     }catch(err: any){
-        res.status(500).json({
-            msg: err.message|| 'Somthing went wrong please try again later!',
-        });
+        return next(err);
     }
 };
 
@@ -37,9 +32,7 @@ export const get = async (req:Req,res:Response,next: NextFunction)=>{
             data: labels,
         });
     }catch(err: any){
-        res.status(500).json({
-            msg: err.message|| 'Somthing went wrong please try again later!',
-        });
+        return next(err);
     };
 };
 
@@ -55,9 +48,7 @@ export const destroy = async (req:Req,res: Response,next: NextFunction)=>{
             throw new Error('No label with this id');
         }
     }catch(err: any){
-        res.status(500).json({
-            msg: err.message|| 'Somthing went wrong please try again later!',
-        });
+        return next(err);
     }
 };  
 
@@ -89,8 +80,6 @@ export const update = async (req:Req,res:Response,next:NextFunction)=>{
             label: lastLabel,
         })
     }catch(err: any){
-        res.status(500).json({
-            msg: err.message|| 'Somthing went wrong please try again later!',
-        });
+        return next(err);
     };
 };
