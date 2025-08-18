@@ -84,6 +84,12 @@ app.use((error: any, req: Req, res: express.Response, next: express.NextFunction
             msg: error.message
         });
     }
+
+    if(error instanceof Error && (error.message)){
+        return res.status(400).json({
+            msg: error.message
+        });
+    }
     
     console.error('Error:', error);
     res.status(500).json({

@@ -127,68 +127,68 @@ export const getTaskOfProject =  async (req:Req,res:Response,next: NextFunction)
 };
 
 
-// export const updateTaskOfProject = async(req:Req,res:Response,next: NextFunction)=>{
-//     const { id } = req.params;
-//     const { taskId , title, desc, status,priority , deadline,tags,labelId } = req.body;
-//     try{
-//         const project = await Project.findById(id);
-//         if(!project){
-//             throw new Error('No Project match with this id');
-//         }
-//         if(project.user.toString() !== req.user?._id.toString()){
-//             throw new Error('You can\'t add task to this project !');
-//         }
-//         const label = await Label.findById(labelId);
-//         if(!label){
-//             throw new Error('No label match this label id');
-//         }
-//         const task = await Task.findByIdAndUpdate(taskId,{
-//                     title,
-//                     desc,
-//                     status,
-//                     priority,
-//                     deadline,
-//                     tags,
-//                     label,
-//                 },{
-//                     new: true,
-//                 });
-//         if(!task){
-//             throw new Error('No task match with task id');
-//         }
-//         // Find the task index in the project's tasks array
-//         let taskIndex = -1;
-//         project.tasks.forEach((taskItem, index) => {
-//             if(taskItem._id.toString() === taskId.toString()){
-//                 taskIndex = index;
-//             }
-//         });
-        
-//         if(taskIndex === -1){
-//             throw new Error('Task not found in this project');
-//         }
+export const updateTaskOfProject = async(req:Req,res:Response,next: NextFunction)=>{
+    const { id } = req.params;
+    const { taskId , title, desc, status,priority , deadline,tags,labelId } = req.body;
+    try{
+        const project = await Project.findById(id);
+        if(!project){
+            throw new Error('No Project match with this id');
+        }
+        if(project.user.toString() !== req.user?._id.toString()){
+            throw new Error('You can\'t add task to this project !');
+        }
+        const label = await Label.findById(labelId);
+        if(!label){
+            throw new Error('No label match this label id');
+        }
+        let tasks: any = project.tasks;
+        project.tasks = project.tasks.map((taskItem: any)=>{
+            if(taskItem._id?.toString() === taskId.toString()){
+                return {
+                    _id: taskItem._id,
+                    title: title || taskItem.title,
+                    desc: desc || taskItem.desc,
+                    status: status || taskItem.status,
+                    priority: priority || taskItem.priority,
+                    deadline: deadline || taskItem.deadline,
+                    tags: tags || taskItem.tags,
+                    label: label || taskItem.label,
+                };
+            }else{
+                return taskItem;
+            }
+        });
+        project.save();
+        res.status(201).json({
+            msg:'task updated succesfully !',
+            data: project,
+        });
+    }catch(err){
+        return next(err);
+    }
+};
 
-//         // Update the embedded task with new data
-//         project.tasks[taskIndex] = {
-//             _id: task._id,
-//             user: {
-//                 _id: task.user,
-//                 firstName: req.user?.firstName || '',
-//                 lastName: req.user?.lastName || '',
-//                 email: req.user?.email || ''
-//             },
-//             priority: task.priority,
-//             status: task.status,
-//             title: task.title,
-//             desc: task.desc,
-//             deadline: task.deadline,
-//             tags: task.tags,
-//             // label: task.label
-//         };
-//         await project.save();
+
+export const destroyTaskOfProject = async(req:Req,res:Response,next: NextFunction)=>{
+    const { id } = req.params;
+    const { taskId , title, desc, status,priority , deadline,tags,labelId } = req.body;
+    try{
+        const project = await Project.findById(id);
+        if(!project){
+            throw new Error('No Project match with this id');
+        }
+        if(project.user.toString() !== req.user?._id.toString()){
+            throw new Error('You can\'t add task to this project !');
+        }
         
-//         res.json({msg: 'Project\'s tasks :',data: project.tasks});
-//     }catch(err){
-//         return next(err);
-//     }
-// };
+        project.tasks = project.tasks.filter((taskItem: any)=>{
+            return (taskItem._id?.toString() !== taskId.toString());
+        });
+        project.save();
+
+        res.json({msg:'Task has been deleted !',data: project});
+    }catch(err){
+        return next(err);
+    }
+};
