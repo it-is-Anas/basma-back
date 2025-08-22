@@ -6,22 +6,6 @@ const projectSchema = new Schema({
         required: true,
     },
     tasks:[
-    //     {
-    //     _id: Schema.Types.ObjectId , 
-    //     user: {
-    //         _id: Schema.Types.ObjectId,
-    //         firstName: String,
-    //         lastName: String,
-    //         email: String
-    //     },
-    //     priority: String,
-    //     status: String,
-    //     title: String,
-    //     desc: String,
-    //     deadline: String,
-    //     tags:[],
-    //     label: String
-    // }
     ],
     user: {
         type: Schema.Types.ObjectId,
