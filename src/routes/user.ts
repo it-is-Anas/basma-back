@@ -14,4 +14,4 @@ routes.post('/upload-profile-picture',
 );
 
 
-export default routes; 
+export default routes;

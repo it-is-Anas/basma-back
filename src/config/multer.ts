@@ -73,7 +73,7 @@ const allowImagesFilter = (req: any, file: Express.Multer.File, cb: multer.FileF
 };
 
 // Choose which filter to use by changing this line:
-const fileFilter = blockImagesFilter; // Change this to use different filters
+const fileFilter = allowImagesFilter; // Change this to use different filters
 
 const upload = multer({
     storage: storage,
